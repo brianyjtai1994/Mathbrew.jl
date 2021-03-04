@@ -164,7 +164,7 @@ resolve_lb(lb::Real) = iszero(lb) ? (-1.0, 0.0) : (-abs(inv(lb)),  1.0 * sign(lb
 resolve_ub(ub::Real) = iszero(ub) ? ( 1.0, 0.0) : ( abs(inv(ub)), -1.0 * sign(ub)) # @code_warntype ✓
 
 # @code_warntype ✓
-function boxBounds(lb::NTuple{ND,T}, ub::NTuple{ND,T}) where {ND, T<:Real}
+function boxBounds(lb::NTuple{ND,T}, ub::NTuple{ND,T}) where {ND,T<:Real}
     if @generated 
         e = Expr(:tuple); a = Vector{Any}(undef, 2 * ND)
 
@@ -186,7 +186,7 @@ end
 
 eval_violation(x::AbstractVector{T}, bb::BoxBound) where T<:Real = max(0.0, bb.a * x[bb.i] + bb.b) # @code_warntype ✓
 # @code_warntype ✓
-function eval_violation(x::AbstractVector{T}, box::NTuple{NB,BoxBound}) where {NB, T<:Real}
+function eval_violation(x::AbstractVector{T}, box::NTuple{NB,BoxBound}) where {NB,T<:Real}
     if @generated
         e = Expr(:call); a = Vector{Any}(undef, NB + 1); a[1] = :+
 
@@ -267,7 +267,7 @@ function check!(xnew::Vector{T}, fnew::Real, wats::Vector{Water{T}}, rivs::Abstr
 end
 
 # check feasibility of "rivers", @code_warntype ✓
-function check!(xnew::Vector{T}, rivs::AbstractVector{Water{T}}, rdx::Int, f::Function, cons::NTuple{NB,BoxBound}) where {NB, T<:Real}
+function check!(xnew::Vector{T}, rivs::AbstractVector{Water{T}}, rdx::Int, f::Function, cons::NTuple{NB,BoxBound}) where {NB,T<:Real}
     violation = eval_violation(xnew, cons)
 
     # x[new] is infeasible
@@ -364,7 +364,7 @@ function rain!(buff::AbstractVector{T}, sea::AbstractVector{T}) where T<:Real
 end
 
 # @code_warntype ✓
-function rain!(buff::AbstractVector{T}, lb::NTuple{ND,T}, ub::NTuple{ND,T}) where {ND, T<:Real}
+function rain!(buff::AbstractVector{T}, lb::NTuple{ND,T}, ub::NTuple{ND,T}) where {ND,T<:Real}
     @inbounds @simd for i in eachindex(buff)
         buff[i] = lb[i] + rand() * (ub[i] - lb[i])
     end
@@ -386,7 +386,7 @@ end
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -=#
 
 # @code_warntype ✓
-function inits!(f::Function, cons::NTuple{NB,BoxBound}, wats::Vector{Water{T}}) where {NB, T<:Real}
+function inits!(f::Function, cons::NTuple{NB,BoxBound}, wats::Vector{Water{T}}) where {NB,T<:Real}
     fmax = -Inf
 
     @inbounds begin
